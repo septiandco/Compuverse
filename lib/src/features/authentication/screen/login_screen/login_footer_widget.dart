@@ -1,0 +1,46 @@
+import 'package:compuvers/src/constants/image_strings.dart';
+import 'package:compuvers/src/constants/text_strings.dart';
+import 'package:flutter/material.dart';
+
+
+class LoginFooterWidget extends StatelessWidget {
+  const LoginFooterWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text("OR"),
+        const SizedBox(height: 20.0,),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: (){}, 
+            icon: Image(image: AssetImage(cGoogleLogo), width: 20.0,),
+            label: Text(cSignWithGoogle),
+          ),
+        ),
+        const SizedBox(height: 40.0,),
+        // TextButton(
+        //   onPressed: (){},
+        //   child:  Text.rich(
+        //     TextSpan(
+        //       text: cDontHaveAnAccount,
+        //       style: Theme.of(context).textTheme.bodyMedium,
+        //       children: const [
+        //         TextSpan(
+        //           text: cSignUp,
+        //           style: TextStyle(color: Colors.blue),
+        //         )
+        //       ],
+        //     )
+        //   ),
+        // )
+      ],
+    );
+  }
+}
+
