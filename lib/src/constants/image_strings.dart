@@ -10,6 +10,6 @@ const String cOnBoardingthree = "assets/images/onboarding/onboarding3.png";
 // Welcome Screen
 const String cWelcome = "assets/images/welcomescreen/welcome.png";
 
-const String cGoogleLogo = "assets/logo/google.png";
+const String cProfilePict = "assets/images/profile/profilepic.png";
 
-
+const String cEventBanner = "assets/images/default/eventplaceholder.png";

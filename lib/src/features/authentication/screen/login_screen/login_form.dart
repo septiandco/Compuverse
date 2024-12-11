@@ -1,5 +1,7 @@
 import 'package:compuvers/src/constants/text_strings.dart';
+import 'package:compuvers/src/features/authentication/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 class LoginForm extends StatelessWidget {
@@ -9,6 +11,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(LoginController());
     return Form(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -16,8 +19,9 @@ class LoginForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
+              controller: controller.email,
               decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.person_outline_outlined),
+                prefixIcon: Icon(Icons.email_outlined),
                 labelText: cEmail,
                 hintText: cEmail,
                 border: OutlineInputBorder(),
@@ -25,6 +29,7 @@ class LoginForm extends StatelessWidget {
             ),
             const SizedBox(height: 20.0),
             TextFormField(
+              controller: controller.password,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.lock_outline_rounded),
                 labelText: cPwd,
@@ -47,7 +52,7 @@ class LoginForm extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: (){}, 
+                onPressed:() => controller.login(),
                 child: Text(cLogin.toUpperCase())
               ),
             )

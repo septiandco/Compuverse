@@ -1,6 +1,9 @@
 import 'package:compuvers/src/constants/image_strings.dart';
 import 'package:compuvers/src/constants/text_strings.dart';
+import 'package:compuvers/src/features/authentication/screen/login_screen/login_screen.dart';
+import 'package:compuvers/src/features/authentication/screen/signup_screen/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 class LoginFooterWidget extends StatelessWidget {
@@ -13,32 +16,22 @@ class LoginFooterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text("OR"),
-        const SizedBox(height: 20.0,),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: (){}, 
-            icon: Image(image: AssetImage(cGoogleLogo), width: 20.0,),
-            label: Text(cSignWithGoogle),
+
+        TextButton(
+          onPressed: () => Get.to(()=>SignupScreen()),
+          child:  Text.rich(
+            TextSpan(
+              text: cDontHaveAnAccount,
+              style: Theme.of(context).textTheme.bodyMedium,
+              children: const [
+                TextSpan(
+                  text: cSignUp,
+                  style: TextStyle(color: Colors.blue),
+                )
+              ],
+            )
           ),
-        ),
-        const SizedBox(height: 40.0,),
-        // TextButton(
-        //   onPressed: (){},
-        //   child:  Text.rich(
-        //     TextSpan(
-        //       text: cDontHaveAnAccount,
-        //       style: Theme.of(context).textTheme.bodyMedium,
-        //       children: const [
-        //         TextSpan(
-        //           text: cSignUp,
-        //           style: TextStyle(color: Colors.blue),
-        //         )
-        //       ],
-        //     )
-        //   ),
-        // )
+        )
       ],
     );
   }

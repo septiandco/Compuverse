@@ -4,9 +4,11 @@ const cAppTagline = "Events, updates, \nand career opportunities";
 
 //Login
 const cLogin = "Login";
-const cSignUp = "SignUp";
+const cLogout = "Logout";
+const cSignUp = "Sign Up";
 const cEmail = "E-Mail";
 const cPwd = "Password";
+const cFullName = "Full Name";
 
 
 // On Boarding screen text
@@ -25,6 +27,22 @@ const cLoginTitle = "Welcome Back to Compuverse!";
 const cLoginSub = "Log in to access computing events, announcements, and opportunities!";
 const cRembemerMe = "Rembember Me?";
 const cAlreadyHaveAnAccount = "Already have an Account?";
-// const cDontHaveAnAccount = "Already have an Account?";
+const cDontHaveAnAccount = "Don't have an Account?";
 const cForgotPwd = "Forgot Password?";
-const cSignWithGoogle = "Sign In With Google";
+
+
+
+const cProfile = "Profile";
+const cEditProfile ="Edit Profile";
+const cProfileHead = "Septian Dwi Cahyo";
+const cProfileSubHead = "septiandwica@gmail.com";
+
+const cEventPage = "Computing Events";
+
+const cAddEvent = "Add Event";
+const cEventDetail = "Detail Event";
+const cTypeEvent ="Event Type";
+const cEventName ="Event Name";
+const cEventDesc = "Event Description";
+const cImageUrl = "Image URL";
+

@@ -3,6 +3,7 @@ import 'package:compuvers/src/constants/image_strings.dart';
 import 'package:compuvers/src/constants/sizes.dart';
 import 'package:compuvers/src/constants/text_strings.dart';
 import 'package:compuvers/src/features/authentication/screen/login_screen/login_screen.dart';
+import 'package:compuvers/src/features/authentication/screen/signup_screen/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,16 +38,16 @@ class WelcomeScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => Get.to(()=>LoginScreen()), 
-                    child: Text(cLogin.toUpperCase())
+                      onPressed: () => Get.to(()=>LoginScreen()),
+                      child: Text(cLogin.toUpperCase())
                   ),
                 ),
                 SizedBox(width: 10.0,),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: (){}, 
+                      onPressed: () => Get.to(() => SignupScreen()),
 
-                    child: Text(cSignUp.toUpperCase())
+                      child: Text(cSignUp.toUpperCase())
                   ),
                 )
               ],

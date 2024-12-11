@@ -1,22 +1,23 @@
-class SignUpWithEmailAndPasswordFailure{
+class LogInWithEmailAndPasswordFailure {
   final String message;
 
-  const SignUpWithEmailAndPasswordFailure([this.message ="An Unknown error Occurred."]);
+  const LogInWithEmailAndPasswordFailure([this.message = "An Unknown error Occurred."]);
 
-  factory SignUpWithEmailAndPasswordFailure.code(String code){
-    switch(code){
-      case 'weak-password':
-        return const SignUpWithEmailAndPasswordFailure("Please enter Stronger password");
+  factory LogInWithEmailAndPasswordFailure.code(String code) {
+    switch (code) {
+      case 'user-not-found':
+        return const LogInWithEmailAndPasswordFailure("No user found for that email.");
+      case 'wrong-password':
+        return const LogInWithEmailAndPasswordFailure("Incorrect password provided for that user.");
       case 'invalid-email':
-        return const SignUpWithEmailAndPasswordFailure("Email ist not valid ord badly formatted");
-      case 'email-already-in-use':
-        return const SignUpWithEmailAndPasswordFailure("An Account Already exist for that email");
-      case 'operation-not_allowed':
-        return const SignUpWithEmailAndPasswordFailure("Operation is not allowed");
+        return const LogInWithEmailAndPasswordFailure("The email address is badly formatted or invalid.");
       case 'user-disabled':
-        return const SignUpWithEmailAndPasswordFailure("This user has been disabled.");
+        return const LogInWithEmailAndPasswordFailure("This user has been disabled.");
+      case 'operation-not-allowed':
+        return const LogInWithEmailAndPasswordFailure("This operation is not allowed.");
       default:
-        return const SignUpWithEmailAndPasswordFailure();
+        return const LogInWithEmailAndPasswordFailure();
     }
   }
+
 }
