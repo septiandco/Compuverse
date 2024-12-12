@@ -16,21 +16,24 @@ class ProfileScreen extends StatelessWidget {
     final controller = Get.put(ProfileController());
 
     return Scaffold(
-      appBar: AppBar(title: Text(cProfile, style: Theme.of(context).textTheme.headlineMedium),),
+      appBar: AppBar(
+        title: Text(cProfile, style: Theme.of(context).textTheme.headlineMedium),
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(cDefaultSize),
-          child: FutureBuilder<UserModel>(
-            future: controller.getUserData(),
+          child: FutureBuilder<UserModel?>(
+            future: controller.getUserData(), // Fetch user data (nullable UserModel)
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error.toString()}'));
-              } else if (snapshot.hasData) {
-                UserModel userData = snapshot.data!;
+              } else if (snapshot.hasData && snapshot.data != null) {
+                UserModel userData = snapshot.data!;  // Safe to unwrap since we check for null
                 return Column(
                   children: [
+                    // Profile Picture (placeholder or from Firebase Storage)
                     SizedBox(
                       width: 120,
                       height: 120,
@@ -40,11 +43,13 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10.0),
-                    // Nama Profil
+
+                    // Full Name and Email
                     Text(userData.fullName, style: Theme.of(context).textTheme.headlineMedium),
                     Text(userData.email, style: Theme.of(context).textTheme.bodyMedium),
                     const SizedBox(height: 20.0),
-                    // Tombol untuk Edit Profil
+
+                    // Edit Profile Button
                     SizedBox(
                       width: 200,
                       child: ElevatedButton(
@@ -59,6 +64,8 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 30.0),
                     const Divider(),
+
+                    // Logout Button
                     ListTile(
                       onTap: () async {
                         await AuthenticationRepository.instance.logout();
@@ -89,3 +96,5 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+

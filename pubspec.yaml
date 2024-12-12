@@ -46,6 +46,7 @@ dependencies:
   google_nav_bar: ^5.0.7
   qr_flutter: ^4.1.0
   mobile_scanner: ^5.2.0
+  flutter_local_notifications: ^18.0.1
 
 
 dev_dependencies:

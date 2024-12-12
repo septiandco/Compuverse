@@ -26,7 +26,7 @@ class _AddEventPageState extends State<AddEventPage> {
       appBar: AppBar(
         title: Text(cAddEvent, style: Theme.of(context).textTheme.headlineMedium),
       ),
-      body: Padding(
+      body: SingleChildScrollView(  // Make the body scrollable
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,

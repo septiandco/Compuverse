@@ -1,6 +1,5 @@
 import 'package:compuvers/src/constants/text_strings.dart';
 import 'package:compuvers/src/features/authentication/controllers/signup_controller.dart';
-import 'package:compuvers/src/features/authentication/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +14,9 @@ class SignupForm extends StatelessWidget {
     final _formKey = GlobalKey<FormState>();
     RxBool obscurePassword = true.obs;
     RxBool obscureConfirmPassword = true.obs;
+
+    // Text controller for confirmPassword field
+    final confirmPasswordController = TextEditingController();
 
     return Form(
       key: _formKey,
@@ -32,6 +34,12 @@ class SignupForm extends StatelessWidget {
                 hintText: cFullName,
                 border: OutlineInputBorder(),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Full Name cannot be empty';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20.0),
 
@@ -44,6 +52,14 @@ class SignupForm extends StatelessWidget {
                 hintText: cEmail,
                 border: OutlineInputBorder(),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email cannot be empty';
+                } else if (!GetUtils.isEmail(value)) {
+                  return 'Enter a valid email';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20.0),
 
@@ -83,7 +99,7 @@ class SignupForm extends StatelessWidget {
             // Confirm Password Field
             Obx(() {
               return TextFormField(
-                controller: controller.confirmPassword,
+                controller: confirmPasswordController,
                 obscureText: obscureConfirmPassword.value,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline_rounded),
@@ -119,12 +135,8 @@ class SignupForm extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    final user = UserModel(
-                      email: controller.email.text.trim().toLowerCase(),
-                      fullName: controller.fullName.text.trim(),
-                      password: controller.password.text.trim(),
-                    );
-                    SignUpController.instance.createUser(user);
+                    // Call the createUser method in SignUpController
+                    controller.createUser();
                   }
                 },
                 child: Text(cSignUp.toUpperCase()),

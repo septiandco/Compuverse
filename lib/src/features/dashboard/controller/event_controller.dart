@@ -67,4 +67,6 @@ class EventController extends GetxController {
   Future<void> deleteEvent(String eventId) async {
     await _eventRepo.deleteEvent(eventId);
   }
+
+
 }

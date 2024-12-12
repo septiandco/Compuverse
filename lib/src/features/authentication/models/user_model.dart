@@ -1,32 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-class UserModel{
-  final String? id;
+
+class UserModel {
+  final String id;
   final String fullName;
   final String email;
-  final String password;
+  final String password; // Make sure to include this if needed
+  final Timestamp createdAt;
 
-  const UserModel({
-    this.id,
+  // Constructor with named parameters
+  UserModel({
+    required this.id,
+    required this.fullName,  // Ensure fullName is required
     required this.email,
-    required this.fullName,
-    required this.password,
+    required this.password,  // Ensure password is required
+    required this.createdAt,
   });
 
-  toJson(){
-    return{
-      "FullName": fullName,
-      "Email": email,
-      "password": password,
+  // toJson method to convert UserModel to a map for Firestore
+  Map<String, dynamic> toJson() {
+    return {
+      'fullName': fullName,
+      'email': email,
+      'password': password,  // Make sure password is included
+      'createdAt': createdAt,
     };
   }
 
-  factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
-    final data = document.data()!;
+  // fromSnapshot method to create UserModel from Firestore snapshot
+  factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
     return UserModel(
-        id: document.id,
-        email: data["Email"],
-        fullName:data["FullName"],
-        password: data["password"],
+      id: snapshot.id,
+      fullName: data['fullName'] ?? '',  // Handle null if necessary
+      email: data['email'] ?? '',
+      password: data['password'] ?? '',  // Handle null if necessary
+      createdAt: data['createdAt'] ?? Timestamp.now(),
     );
   }
 }

@@ -66,7 +66,7 @@ class _EditEventPageState extends State<EditEventPage> {
       appBar: AppBar(
         title: Text(widget.eventId == null ? cAddEvent : 'Update Event', style: Theme.of(context).textTheme.headlineMedium),
       ),
-      body: Padding(
+      body: SingleChildScrollView(  // Make the body scrollable
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,

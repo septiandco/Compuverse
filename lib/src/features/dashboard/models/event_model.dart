@@ -2,33 +2,35 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EventModel {
   final String? id;
-  final String eventDate;  // Add eventDate as String
+  final String eventDate;
   final String eventDescription;
   final String eventName;
   final String eventType;
   final String location;
   final String imageUrl;
-  // Add location as String
+  final List<Map<String, dynamic>> candidates; // Tambahkan properti candidates
 
   const EventModel({
     this.id,
-    required this.eventDate,  // Add eventDate to the constructor
+    required this.eventDate,
     required this.eventDescription,
     required this.eventName,
     required this.eventType,
-    required this.location,   // Add location to the constructor
+    required this.location,
     required this.imageUrl,
+    this.candidates = const [], // Default adalah list kosong
   });
 
   // Convert EventModel to JSON format for Firestore
   Map<String, dynamic> toJson() {
     return {
-      "EventDate": eventDate,  // Include eventDate in JSON
+      "EventDate": eventDate,
       "EventDescription": eventDescription,
       "EventName": eventName,
       "EventType": eventType,
-      "Location": location,    // Include location in JSON
+      "Location": location,
       "imageUrl": imageUrl,
+      "Candidates": candidates, // Masukkan kandidat ke JSON
     };
   }
 
@@ -41,8 +43,11 @@ class EventModel {
       eventDescription: data["EventDescription"],
       eventName: data["EventName"],
       eventType: data["EventType"],
-      location: data["Location"],    // Fetch location from Firestore
+      location: data["Location"],
       imageUrl: data["imageUrl"],
+      candidates: data["Candidates"] != null
+          ? List<Map<String, dynamic>>.from(data["Candidates"])
+          : [],
     );
   }
 }

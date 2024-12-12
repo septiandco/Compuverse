@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner:false,
-      title: 'Compuverse',
+      title: 'Flutter Demo',
       theme: CAppTheme.lightTheme,
       darkTheme: CAppTheme.darkTheme,
       themeMode: ThemeMode.system,

@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compuvers/src/constants/colors.dart';
-import 'package:compuvers/src/constants/image_strings.dart';
 import 'package:compuvers/src/constants/sizes.dart';
 import 'package:compuvers/src/constants/text_strings.dart';
 import 'package:compuvers/src/features/dashboard/controller/profile_controller.dart';
@@ -39,14 +39,6 @@ class UpdateProfile extends StatelessWidget {
 
                   return Column(
                     children: [
-                      SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: const Image(image: AssetImage(cProfilePict)),
-                        ),
-                      ),
                       const SizedBox(height: 20.0),
                       Form(
                         key: _formKey,
@@ -74,8 +66,6 @@ class UpdateProfile extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            // Password Field - Editable with Eye Icon
-
                             // New Password Field
                             Obx(() {
                               return TextFormField(
@@ -152,7 +142,8 @@ class UpdateProfile extends StatelessWidget {
                                       id: userData.id,
                                       email: email.text.trim(),
                                       fullName: fullName.text.trim(),
-                                      password: newPassword.text.trim(), // Use new password here
+                                      password: newPassword.text.trim(),
+                                      createdAt: Timestamp.now(),// Use new password here
                                     );
 
                                     await controller.updateRecord(updatedUserData, newPassword.text.trim());
