@@ -13,3 +13,7 @@ const String cWelcome = "assets/images/welcomescreen/welcome.png";
 const String cProfilePict = "assets/images/profile/profilepic.png";
 
 const String cEventBanner = "assets/images/default/eventplaceholder.png";
+const String cCareerBanner = "assets/images/default/eventplaceholder.png";
+const String cSignature = "assets/images/default/signature.png";
+
+

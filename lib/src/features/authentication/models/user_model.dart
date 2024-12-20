@@ -4,15 +4,15 @@ class UserModel {
   final String id;
   final String fullName;
   final String email;
-  final String password; // Make sure to include this if needed
+  final String password;
   final Timestamp createdAt;
 
   // Constructor with named parameters
   UserModel({
     required this.id,
-    required this.fullName,  // Ensure fullName is required
+    required this.fullName,
     required this.email,
-    required this.password,  // Ensure password is required
+    required this.password,
     required this.createdAt,
   });
 
@@ -21,7 +21,7 @@ class UserModel {
     return {
       'fullName': fullName,
       'email': email,
-      'password': password,  // Make sure password is included
+      'password': password,
       'createdAt': createdAt,
     };
   }
@@ -31,9 +31,9 @@ class UserModel {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserModel(
       id: snapshot.id,
-      fullName: data['fullName'] ?? '',  // Handle null if necessary
+      fullName: data['fullName'] ?? '',
       email: data['email'] ?? '',
-      password: data['password'] ?? '',  // Handle null if necessary
+      password: data['password'] ?? '',
       createdAt: data['createdAt'] ?? Timestamp.now(),
     );
   }

@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compuvers/src/features/authentication/models/user_model.dart';
+import 'package:compuvers/src/features/dashboard/controller/attendance_controller.dart';
 import 'package:flutter/material.dart';
 
 class AttendanceListPage extends StatelessWidget {
   final String eventId;
+  final AttendanceListController controller = AttendanceListController();
 
   AttendanceListPage({required this.eventId});
 
@@ -14,11 +17,7 @@ class AttendanceListPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection("Events")
-            .doc(eventId)
-            .collection("Attendance")
-            .snapshots(),
+        stream: controller.getAttendanceStream(eventId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -41,12 +40,34 @@ class AttendanceListPage extends StatelessWidget {
                   ? (doc['timestamp'] as Timestamp).toDate()
                   : null;
 
-              return ListTile(
-                leading: const Icon(Icons.person),
-                title: Text(userId),
-                subtitle: timestamp != null
-                    ? Text("Checked in: ${timestamp.toLocal()}")
-                    : const Text("Timestamp not available"),
+              return FutureBuilder<DocumentSnapshot>(
+                future: controller.getUserById(userId),
+                builder: (context, userSnapshot) {
+                  if (userSnapshot.connectionState == ConnectionState.waiting) {
+                    return const ListTile(
+                      leading: CircularProgressIndicator(),
+                      title: Text('Loading user info...'),
+                    );
+                  }
+                  if (userSnapshot.hasError || !userSnapshot.hasData || !userSnapshot.data!.exists) {
+                    return ListTile(
+                      leading: const Icon(Icons.error),
+                      title: Text(userId),
+                      subtitle: const Text('Error fetching user details'),
+                    );
+                  }
+
+                  final userDoc = userSnapshot.data!;
+                  final userModel = UserModel.fromSnapshot(userDoc);
+
+                  return ListTile(
+                    leading: const Icon(Icons.person),
+                    title: Text(userModel.fullName),
+                    subtitle: timestamp != null
+                        ? Text("Checked in: ${timestamp.toLocal()}")
+                        : const Text("Timestamp not available"),
+                  );
+                },
               );
             },
           );

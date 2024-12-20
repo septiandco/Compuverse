@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EditEventPage extends StatefulWidget {
-  final String? eventId;  // Add eventId parameter for update functionality
+  final String? eventId;
 
   const EditEventPage({Key? key, this.eventId}) : super(key: key);
 
@@ -19,19 +19,25 @@ class _EditEventPageState extends State<EditEventPage> {
   String? _eventName;
   String? _eventDescription;
   String? _imageUrl;
-  String? _eventDate; // New field for event date
-  String? _location; // New field for location
+  String? _eventDate;
+  String? _location;
+  List<Map<String, dynamic>> _candidates = []; // Daftar kandidat
+  bool isLoading = false;
 
-  bool isLoading = false; // Variable to track loading state
-
-  final List<String> _eventTypes = ['Conference', 'Workshop', 'Seminar', 'Webinar', 'Competition', 'Mentoring'];
+  final List<String> _eventTypes = [
+    'Conference',
+    'Workshop',
+    'Seminar',
+    'Webinar',
+    'Competition',
+    'Election', // Tambahkan tipe event untuk pemilihan
+  ];
 
   final controller = Get.put(EventController());
 
   @override
   void initState() {
     super.initState();
-    // If eventId is provided, load event data
     if (widget.eventId != null) {
       _loadEventData(widget.eventId!);
     }
@@ -47,9 +53,13 @@ class _EditEventPageState extends State<EditEventPage> {
         _eventDate = event.eventDate;
         _location = event.location;
         _imageUrl = event.imageUrl;
+        _candidates = event.candidates; // Memuat kandidat yang ada
       });
 
-      // Set controller text directly for form fields
+      if (!_eventTypes.contains(_eventType)) {
+        _eventType = _eventTypes[0];
+      }
+
       controller.eventName.text = _eventName!;
       controller.eventDescription.text = _eventDescription!;
       controller.eventDate.text = _eventDate!;
@@ -60,26 +70,99 @@ class _EditEventPageState extends State<EditEventPage> {
     }
   }
 
+  void _addCandidate() {
+    setState(() {
+      _candidates.add({
+        "name": "",
+        "votes": 0,
+      });
+    });
+  }
+
+  void _updateCandidateName(int index, String name) {
+    setState(() {
+      _candidates[index]["name"] = name;
+    });
+  }
+
+  void _removeCandidate(int index) {
+    setState(() {
+      _candidates.removeAt(index);
+    });
+  }
+
+  // Function to delete event with confirmation
+  void _deleteEvent() async {
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Event'),
+          content: Text('Are you sure you want to delete this event?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      // Proceed with deleting the event
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        await controller.deleteEvent(widget.eventId!);
+        setState(() {
+          isLoading = false;
+        });
+
+        Navigator.pop(context); // Navigate back after deletion
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        Get.snackbar(
+          'Error',
+          'Failed to delete event. Please try again later.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.1),
+          colorText: Colors.red,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.eventId == null ? cAddEvent : 'Update Event', style: Theme.of(context).textTheme.headlineMedium),
+        title: Text(
+          widget.eventId == null ? cAddEvent : 'Update Event',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
-      body: SingleChildScrollView(  // Make the body scrollable
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Event Type Dropdown
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: cTypeEvent,
                   border: OutlineInputBorder(),
                 ),
-                value: _eventType,
+                value: _eventType ?? _eventTypes[0],
                 onChanged: (String? newValue) {
                   setState(() {
                     _eventType = newValue;
@@ -100,7 +183,6 @@ class _EditEventPageState extends State<EditEventPage> {
               ),
               const SizedBox(height: 16.0),
 
-              // Event Name TextField
               TextFormField(
                 controller: controller.eventName,
                 decoration: const InputDecoration(
@@ -116,7 +198,6 @@ class _EditEventPageState extends State<EditEventPage> {
               ),
               const SizedBox(height: 16.0),
 
-              // Event Description TextField
               TextFormField(
                 controller: controller.eventDescription,
                 decoration: const InputDecoration(
@@ -129,10 +210,12 @@ class _EditEventPageState extends State<EditEventPage> {
                   }
                   return null;
                 },
+                maxLines: null, // Allows the text field to expand vertically
+                minLines: 1, // Optional: Set a minimum height (in lines) for the text field
+                keyboardType: TextInputType.multiline, // Supports multiline input
               ),
               const SizedBox(height: 16.0),
 
-              // Event Date TextField (string format)
               TextFormField(
                 controller: controller.eventDate,
                 decoration: const InputDecoration(
@@ -148,7 +231,6 @@ class _EditEventPageState extends State<EditEventPage> {
               ),
               const SizedBox(height: 16.0),
 
-              // Event Location TextField
               TextFormField(
                 controller: controller.location,
                 decoration: const InputDecoration(
@@ -164,7 +246,6 @@ class _EditEventPageState extends State<EditEventPage> {
               ),
               const SizedBox(height: 16.0),
 
-              // Image URL TextField
               TextFormField(
                 controller: controller.imageUrl,
                 decoration: const InputDecoration(
@@ -178,73 +259,100 @@ class _EditEventPageState extends State<EditEventPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16.0),
+
+              // Tambahkan bagian untuk mengelola kandidat pada pemilihan
+              if (_eventType == 'Election') ...[
+                Text('Candidates', style: Theme.of(context).textTheme.headlineSmall),
+                const SizedBox(height: 16.0),
+                for (int i = 0; i < _candidates.length; i++) ...[
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          initialValue: _candidates[i]["name"],
+                          decoration: InputDecoration(
+                            labelText: 'Candidate ${i + 1} Name',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (value) {
+                            _updateCandidateName(i, value);
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.remove_circle, color: Colors.red),
+                        onPressed: () => _removeCandidate(i),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8.0),
+                ],
+                ElevatedButton(
+                  onPressed: _addCandidate,
+                  child: Text('Add Candidate'),
+                ),
+              ],
               const SizedBox(height: 32.0),
 
-              // Update or Create Button
               isLoading
-                  ? Center(child: CircularProgressIndicator())  // Show loading indicator when isLoading is true
-                  : ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      isLoading = true;  // Start loading
-                    });
-
-                    // No need to call save explicitly; use controller's text directly
-                    if (widget.eventId == null) {
-                      controller.addEvent(
-                        controller.eventDate.text,
-                        controller.eventDescription.text,
-                        controller.eventName.text,
-                        _eventType!,
-                        controller.location.text,
-                        controller.imageUrl.text,
-                      );
-                    } else {
-                      // Update existing event
-                      EventModel updatedEvent = EventModel(
-                        eventDate: controller.eventDate.text,
-                        eventDescription: controller.eventDescription.text,
-                        eventName: controller.eventName.text,
-                        eventType: _eventType!,
-                        location: controller.location.text,
-                        imageUrl: controller.imageUrl.text,
-                      );
-                      await controller.updateEvent(widget.eventId!, updatedEvent);
-                    }
-
-                    setState(() {
-                      isLoading = false;  // Stop loading
-                    });
-
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text(widget.eventId == null ? 'Create Event' : 'Update Event'),
-              ),
-
-              // Add a Delete Button
-              if (widget.eventId != null) // Only show the delete button if eventId is not null
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: ElevatedButton(
+                  ? Center(child: CircularProgressIndicator())
+                  : Column(
+                children: [
+                  ElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                      await controller.deleteEvent(widget.eventId!);
+                        if (widget.eventId == null) {
+                          controller.addEvent(
+                            controller.eventDate.text,
+                            controller.eventDescription.text,
+                            controller.eventName.text,
+                            _eventType!,
+                            controller.location.text,
+                            controller.imageUrl.text,
+                            candidates: _candidates, // Mengirimkan daftar kandidat
+                          );
+                        } else {
+                          EventModel updatedEvent = EventModel(
+                            eventDate: controller.eventDate.text,
+                            eventDescription: controller.eventDescription.text,
+                            eventName: controller.eventName.text,
+                            eventType: _eventType!,
+                            location: controller.location.text,
+                            imageUrl: controller.imageUrl.text,
+                            candidates: _candidates, // Mengupdate kandidat
+                          );
+                          await controller.updateEvent(widget.eventId!, updatedEvent);
+                        }
 
-                      setState(() {
-                        isLoading = false;
-                      });
+                        setState(() {
+                          isLoading = false;
+                        });
 
-                      Navigator.pop(context);  // After deleting, pop the page
+                        Navigator.pop(context);
+                      }
                     },
-
-                    child: Text('Delete Event', style: TextStyle(color: Colors.black)),
+                    child: Text(widget.eventId == null ? 'Create Event' : 'Update Event'),
                   ),
-                ),
+                  const SizedBox(height: 16.0),
+                  if (widget.eventId != null)
+                    ElevatedButton(
+                      onPressed: _deleteEvent,
+                      child: Text(
+                        'Delete Event',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: Colors.red),
+                      ),
+                    ),
+                ],
+              ),
             ],
           ),
         ),

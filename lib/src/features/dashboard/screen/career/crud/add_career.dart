@@ -16,7 +16,7 @@ class _AddCareerPageState extends State<AddCareerPage> {
   String? _imageUrl;
   String? _applicationDeadline; // New field for application deadline
   String? _location; // New field for job location
-  final TextEditingController _candidateNameController = TextEditingController();
+  String? _relatedUrl; // New field for related site URL
 
   final List<String> _jobTypes = [
     'Full-time',
@@ -24,6 +24,8 @@ class _AddCareerPageState extends State<AddCareerPage> {
     'Internship',
     'Freelance',
     'Remote',
+    'On-Site',
+    'Hybrid',
   ];
 
   @override
@@ -161,6 +163,24 @@ class _AddCareerPageState extends State<AddCareerPage> {
                   _imageUrl = value;
                 },
               ),
+              const SizedBox(height: 16.0),
+
+              // Related Site URL TextField (New)
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Related Site URL',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value != null && value.isNotEmpty && !Uri.tryParse(value)!.isAbsolute) {
+                    return 'Please enter a valid URL';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _relatedUrl = value;
+                },
+              ),
               const SizedBox(height: 32.0),
 
               // Submit Button
@@ -172,17 +192,19 @@ class _AddCareerPageState extends State<AddCareerPage> {
                     // Call the addCareer function from the controller
                     controller.addCareer(
                       _applicationDeadline!,
+                      _imageUrl!,
                       _jobDescription!,
                       _jobTitle!,
                       _jobType!,
                       _location!,
-                      _imageUrl!,
+                      _relatedUrl!, // Pass the new URL field here
                     );
 
                     // Reset form fields after submission
                     controller.jobTitle.clear();
                     controller.jobDescription.clear();
                     controller.imageUrl.clear();
+                    controller.relatedUrl.clear();  // Reset the related URL field as well
                     setState(() {
                       _jobType = null;
                     });

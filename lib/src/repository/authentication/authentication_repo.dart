@@ -89,7 +89,7 @@ class AuthenticationRepository extends GetxController {
           print("ERROR - $error");
         });
       } else {
-        throw SignUpWithEmailAndPasswordFailure();
+        throw const SignUpWithEmailAndPasswordFailure();
       }
     } on FirebaseAuthException catch (e) {
       final ex = SignUpWithEmailAndPasswordFailure.code(e.code);

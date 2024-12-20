@@ -47,6 +47,11 @@ dependencies:
   qr_flutter: ^4.1.0
   mobile_scanner: ^5.2.0
   flutter_local_notifications: ^18.0.1
+  url_launcher: ^6.3.1
+  fl_chart: ^0.69.2
+  path_provider: ^2.1.5
+  pdf: ^3.11.1
+  permission_handler: ^11.3.1
 
 
 dev_dependencies:
@@ -81,6 +86,9 @@ flutter:
     - assets/images/profile/
     - assets/images/events/
     - assets/images/default/
+    - assets/images/default/signature.png
+    - assets/fonts/Roboto/Roboto-Regular.ttf
+    - assets/fonts/Roboto/Roboto-Bold.ttf
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

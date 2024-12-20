@@ -25,9 +25,9 @@ class _UserDashboardState extends State<UserDashboard> {
     super.initState();
     // Initialize the _pages list in initState
     _pages = [
-      EventPage(),  // This page has AppBar
-      AnnouncementPage(),  // No AppBar here
-      CareerPage(),  // No AppBar here
+      const EventPage(),  // This page has AppBar
+      // AnnouncementPage(),  // No AppBar here
+      const CareerPage(),  // No AppBar here
       ProfileScreen(),  // No AppBar here
     ];
   }
@@ -60,15 +60,15 @@ class _UserDashboardState extends State<UserDashboard> {
             GButton(
               icon: Icons.calendar_today,
               onPressed: () {
-                _onItemTapped(0); // Adjust index if needed
+                _onItemTapped(0);
               },
             ),
-            GButton(
-              icon: Icons.info,
-              onPressed: () {
-                _onItemTapped(1);
-              },
-            ),
+            // GButton(
+            //   icon: Icons.info,
+            //   onPressed: () {
+            //     _onItemTapped(1);
+            //   },
+            // ),
             GButton(
               icon: Icons.business_center,
               onPressed: () {

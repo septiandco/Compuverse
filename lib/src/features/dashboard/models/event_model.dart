@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 class EventModel {
   final String? id;
   final String eventDate;
@@ -8,9 +7,11 @@ class EventModel {
   final String eventType;
   final String location;
   final String imageUrl;
-  final List<Map<String, dynamic>> candidates; // Tambahkan properti candidates
+  final List<Map<String, dynamic>> candidates;
+  final List<String> voters;
+  final List<Map<String, dynamic>> teams; // Menambahkan field teams
 
-  const EventModel({
+  EventModel({
     this.id,
     required this.eventDate,
     required this.eventDescription,
@@ -18,23 +19,11 @@ class EventModel {
     required this.eventType,
     required this.location,
     required this.imageUrl,
-    this.candidates = const [], // Default adalah list kosong
+    this.candidates = const [],
+    this.voters = const [],
+    this.teams = const [], // Inisialisasi field teams
   });
 
-  // Convert EventModel to JSON format for Firestore
-  Map<String, dynamic> toJson() {
-    return {
-      "EventDate": eventDate,
-      "EventDescription": eventDescription,
-      "EventName": eventName,
-      "EventType": eventType,
-      "Location": location,
-      "imageUrl": imageUrl,
-      "Candidates": candidates, // Masukkan kandidat ke JSON
-    };
-  }
-
-  // Read snapshot from Firestore and convert to EventModel
   factory EventModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return EventModel(
@@ -48,6 +37,26 @@ class EventModel {
       candidates: data["Candidates"] != null
           ? List<Map<String, dynamic>>.from(data["Candidates"])
           : [],
+      voters: data["Voters"] != null
+          ? List<String>.from(data["Voters"])
+          : [],
+      teams: data["Teams"] != null
+          ? List<Map<String, dynamic>>.from(data["Teams"])
+          : [], // Mengambil data tim
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "EventDate": eventDate,
+      "EventDescription": eventDescription,
+      "EventName": eventName,
+      "EventType": eventType,
+      "Location": location,
+      "imageUrl": imageUrl,
+      "Candidates": candidates,
+      "Voters": voters,
+      "Teams": teams, // Menyimpan data tim
+    };
   }
 }

@@ -39,6 +39,8 @@ const cProfileSubHead = "septiandwica@gmail.com";
 
 const cEventPage = "Computing Events";
 
+const cCareerPage = "Explore Opportunities";
+
 const cAddEvent = "Add Event";
 const cEventDetail = "Detail Event";
 const cTypeEvent ="Event Type";
@@ -46,3 +48,11 @@ const cEventName ="Event Name";
 const cEventDesc = "Event Description";
 const cImageUrl = "Image URL";
 
+const cAddCareer = "Add Job Listing";
+const cCareerDetail = "Job Listing Details";
+const cJobType = "Job Type";
+const cJobTitle = "Job Title";
+const cJobDesc = "Job Description";
+const cApplicationDeadline = "Application Deadline";
+const cLocation = "Location";
+const cApplicants = "Applicants"; // List of applicants who have applied for the job

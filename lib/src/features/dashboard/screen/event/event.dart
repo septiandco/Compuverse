@@ -35,7 +35,7 @@ class _EventPageState extends State<EventPage> {
             final user = authRepo.firebaseUser.value;
             if (user != null && user.email == 'septiandwica@gmail.com') {
               return Row(
-                mainAxisSize: MainAxisSize.min, // Pastikan ukuran Row minimum
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.add),
@@ -61,20 +61,26 @@ class _EventPageState extends State<EventPage> {
         children: [
           // 1. Button Bar for Event Types with Horizontal Scroll
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
                   _eventTypeButton('All'),
                   const SizedBox(width: 10),
+                  _eventTypeButton('Conference'),
+                  const SizedBox(width: 10),
                   _eventTypeButton('Workshop'),
                   const SizedBox(width: 10),
                   _eventTypeButton('Seminar'),
                   const SizedBox(width: 10),
-                  _eventTypeButton('Conference'),
+                  _eventTypeButton('Webinar'),
                   const SizedBox(width: 10),
                   _eventTypeButton('Competition'),
+                  const SizedBox(width: 10),
+                  _eventTypeButton('Mentoring'),
+                  const SizedBox(width: 10),
+                  _eventTypeButton('Election'),
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compuvers/src/constants/colors.dart';
+import 'package:compuvers/src/constants/image_strings.dart';
 import 'package:compuvers/src/constants/sizes.dart';
 import 'package:compuvers/src/constants/text_strings.dart';
 import 'package:compuvers/src/features/dashboard/controller/profile_controller.dart';
@@ -44,6 +45,15 @@ class UpdateProfile extends StatelessWidget {
                         key: _formKey,
                         child: Column(
                           children: [
+                            SizedBox(
+                              width: 120,
+                              height: 120,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: const Image(image: AssetImage(cProfilePict)),
+                              ),
+                            ),
+                            const SizedBox(height: 20.0),
                             // Full Name Field - Disabled
                             TextFormField(
                               controller: fullName,

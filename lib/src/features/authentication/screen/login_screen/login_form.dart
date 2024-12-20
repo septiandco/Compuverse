@@ -3,18 +3,17 @@ import 'package:compuvers/src/features/authentication/controllers/login_controll
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class LoginForm extends StatelessWidget {
-  const LoginForm({
-    super.key,
-  });
+  const LoginForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(LoginController());
+    final RxBool isPasswordHidden = true.obs;
+
     return Form(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -28,37 +27,44 @@ class LoginForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20.0),
-            TextFormField(
+            Obx(() => TextFormField(
               controller: controller.password,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.lock_outline_rounded),
+              obscureText: isPasswordHidden.value,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.lock_outline_rounded),
                 labelText: cPwd,
                 hintText: cPwd,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  onPressed: null, 
-                  icon: Icon(Icons.remove_red_eye_sharp)
-                )
+                  onPressed: () {
+                    isPasswordHidden.value = !isPasswordHidden.value;
+                  },
+                  icon: Icon(
+                    isPasswordHidden.value
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 5.0,),
+            )),
+            const SizedBox(height: 5.0),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: (){}, 
+                onPressed: () {},
                 child: const Text(cForgotPwd),
               ),
             ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed:() => controller.login(),
-                child: Text(cLogin.toUpperCase())
+                onPressed: () => controller.login(),
+                child: Text(cLogin.toUpperCase()),
               ),
-            )
+            ),
           ],
         ),
-      )
+      ),
     );
   }
 }

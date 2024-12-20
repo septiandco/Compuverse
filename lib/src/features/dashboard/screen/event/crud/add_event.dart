@@ -1,7 +1,7 @@
-import 'package:compuvers/src/constants/text_strings.dart';
-import 'package:compuvers/src/features/dashboard/controller/event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:compuvers/src/features/dashboard/controller/event_controller.dart';
+import 'package:compuvers/src/constants/text_strings.dart';
 
 class AddEventPage extends StatefulWidget {
   @override
@@ -16,8 +16,18 @@ class _AddEventPageState extends State<AddEventPage> {
   String? _imageUrl;
   String? _eventDate; // New field for event date
   String? _location; // New field for location
+  final List<Map<String, dynamic>> _candidates = [];
+  final TextEditingController _candidateNameController = TextEditingController();
 
-  final List<String> _eventTypes = ['Conference', 'Workshop', 'Seminar', 'Webinar', 'Competition', 'Mentoring'];
+  final List<String> _eventTypes = [
+    'Conference',
+    'Workshop',
+    'Seminar',
+    'Webinar',
+    'Competition',
+    'Mentoring',
+    'Election'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +36,7 @@ class _AddEventPageState extends State<AddEventPage> {
       appBar: AppBar(
         title: Text(cAddEvent, style: Theme.of(context).textTheme.headlineMedium),
       ),
-      body: SingleChildScrollView(  // Make the body scrollable
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -95,10 +105,13 @@ class _AddEventPageState extends State<AddEventPage> {
                 onSaved: (value) {
                   _eventDescription = value;
                 },
+                maxLines: null, // Allows the text field to expand vertically
+                minLines: 8, // Optional: Set a minimum height (in lines) for the text field
+                keyboardType: TextInputType.multiline, // Supports multiline input
               ),
               const SizedBox(height: 16.0),
 
-              // Event Date TextField (string format)
+              // Event Date TextField
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Event Date (YYYY-MM-DD)',
@@ -153,19 +166,59 @@ class _AddEventPageState extends State<AddEventPage> {
               ),
               const SizedBox(height: 32.0),
 
+              // Candidate Section (only for Election events)
+              if (_eventType == 'Election') ...[
+                const Text(
+                  "Candidates",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8.0),
+                TextFormField(
+                  controller: _candidateNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Candidate Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_candidateNameController.text.isNotEmpty) {
+                      setState(() {
+                        _candidates.add({"name": _candidateNameController.text, "votes": 0});
+                      });
+                      _candidateNameController.clear();
+                    }
+                  },
+                  child: const Text("Add Candidate"),
+                ),
+                const SizedBox(height: 16.0),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _candidates.length,
+                  itemBuilder: (context, index) {
+                    final candidate = _candidates[index];
+                    return ListTile(
+                      title: Text(candidate["name"]),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            _candidates.removeAt(index);
+                          });
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16.0),
+              ],
+
               // Submit Button
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-
-                    // Printing the form data to verify
-                    print('Event Type: $_eventType');
-                    print('Event Name: $_eventName');
-                    print('Event Description: $_eventDescription');
-                    print('Event Date: $_eventDate');
-                    print('Event Location: $_location');
-                    print('Image URL: $_imageUrl');
 
                     // Call the addEvent function from the controller
                     controller.addEvent(
@@ -175,6 +228,7 @@ class _AddEventPageState extends State<AddEventPage> {
                       _eventType!,
                       _location!,
                       _imageUrl!,
+                      candidates: _candidates, // Include candidates if it's an election
                     );
 
                     // Reset form fields after submission
@@ -184,13 +238,14 @@ class _AddEventPageState extends State<AddEventPage> {
                     controller.imageUrl.clear();
                     setState(() {
                       _eventType = null;
+                      _candidates.clear();
                     });
 
-                    // Go back to the previous screen
+                    // Navigate back after submission
                     Navigator.pop(context);
                   }
                 },
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),
