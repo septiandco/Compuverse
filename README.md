@@ -52,7 +52,7 @@ Make sure you have the following installed on your system:
 
 ### Project Structure
 
-Here is the complete project structure:
+Here is the complete project structure(MNC + Repo as db):
 
 ```plaintext
 lib/
