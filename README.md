@@ -5,6 +5,7 @@ Welcome to **Compuverse**, a Flutter project designed to kickstart your mobile a
 - [Septian Dwi Cahyo](https://github.com/septiandwica)
 - [Samuel George Sasaki](https://github.com/samuelsasaki)
 - [Salsabil Maheswari](https://github.com/SalsabilMaheswari)
+
 ## Getting Started
 
 Follow this guide to set up and run the project locally. If you're new to Flutter, don't worry—we've got resources to help you along the way!
@@ -25,7 +26,7 @@ Make sure you have the following installed on your system:
 
    ```bash
    git clone https://github.com/septiandco/Compuverse.git
-   cd compuverse
+   cd Compuverse
    ```
 
 2. **Install Dependencies**
@@ -52,7 +53,7 @@ Make sure you have the following installed on your system:
 
 ### Project Structure
 
-Here is the complete project structure(MNC + Repo as db):
+Here is the complete project structure (using MVC + Repository as the database pattern):
 
 ```plaintext
 lib/
@@ -142,6 +143,64 @@ lib/
     ├── firebase_options.dart
     └── main.dart
 ```
+
+### Explanation of the Folder Structure
+
+#### **1. `constants/`**
+- Stores all constants (e.g., colors, sizes, text, and image references) for centralized management.
+- Makes it easy to modify shared data like themes and assets without searching across multiple files.
+
+#### **2. `features/`**
+- Organized into separate folders for each feature, ensuring modularity and scalability.
+- Each feature folder contains:
+  - **`controllers/`**: Handles business logic and state management for the feature.
+  - **`models/`**: Defines the data structure for the feature.
+  - **`screen/`**: Contains UI components specific to the feature.
+
+#### **3. `repository/`**
+- Provides a layer of abstraction between the application's business logic and the data source (Firestore).
+- Ensures clean separation of concerns and reusability of data management code.
+- Example: `attandance_repo.dart` manages CRUD operations for attandance.
+
+#### **4. `utils/`**
+- Contains reusable utilities like app-wide themes or helper functions.
+- Example: `theme/` manages colors, fonts, and other design-related configurations.
+
+#### **5. Core Files**
+- `firebase_options.dart`: Stores Firebase configuration to connect the app to Firebase services (e.g., Firestore, Authentication).
+- `main.dart`: The entry point of the Flutter application, initializing Firebase and loading the main widget.
+
+### Benefits of MVC + Repository Pattern
+
+1. **Maintainability**:
+   - Modular folders make it easier to locate and update specific features or components.
+   - Isolated layers (e.g., controller, repository) minimize code conflicts during team collaboration.
+
+2. **Scalability**:
+   - Adding new features requires creating a new folder under `features/` without affecting existing code.
+
+3. **Reusability**:
+   - Repository functions (e.g., CRUD operations) can be reused across different parts of the application.
+
+4. **Debugging Simplicity**:
+   - Errors are easy to trace since the responsibilities of controllers, repositories, and views are clearly separated.
+
+### Example Data Flow
+**Use Case: Adding a New Announcement**
+
+1. **UI (`screen/event/event.dart`)**:
+   - The user can see list of the event
+
+2. **Controller (`controller/attandance_repo.dart`)**:
+   - Validates the user input and calls the repository to save the data to Firestore.
+
+3. **Repository (`repository/attandance_controller.dart`)**:
+   - Sends the data to Firestore via Firebase APIs.
+
+4. **Firestore**:
+   - Stores the announcement data and sends a response back to the app.
+
+---
 
 ### Debugging Tips
 
